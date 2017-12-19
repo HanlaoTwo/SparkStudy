@@ -17,27 +17,16 @@
 package sql
 
 import org.apache.spark.sql.Row
-// $example on:init_session$
 import org.apache.spark.sql.SparkSession
-// $example off:init_session$
-// $example on:programmatic_schema$
-// $example on:data_types$
 import org.apache.spark.sql.types._
-// $example off:data_types$
-// $example off:programmatic_schema$
 
 object SparkSQLExample {
 
-  // $example on:create_ds$
   case class Person(name: String, age: Long)
-  // $example off:create_ds$
 
   def main(args: Array[String]) {
-    // $example on:init_session$
+    // 初始化
     val spark = SparkSession.builder().appName("Spark SQL basic example").config("spark.some.config.option", "some-value").getOrCreate()
-
-    // For implicit conversions like converting RDDs to DataFrames
-    // $example off:init_session$
 
     runBasicDataFrameExample(spark)
     runDatasetCreationExample(spark)
@@ -48,10 +37,8 @@ object SparkSQLExample {
   }
 
   private def runBasicDataFrameExample(spark: SparkSession): Unit = {
-    // $example on:create_df$
+    // 创建f$
     val df = spark.read.json("examples/src/main/resources/people.json")
-
-    // Displays the content of the DataFrame to stdout
     df.show()
     // +----+-------+
     // | age|   name|
@@ -60,12 +47,7 @@ object SparkSQLExample {
     // |  30|   Andy|
     // |  19| Justin|
     // +----+-------+
-    // $example off:create_df$
-
-    // $example on:untyped_ops$
-    // This import is needed to use the $-notation
     import spark.implicits._
-    // Print the schema in a tree format
     df.printSchema()
     // root
     // |-- age: long (nullable = true)
@@ -153,8 +135,6 @@ object SparkSQLExample {
 
   private def runDatasetCreationExample(spark: SparkSession): Unit = {
     import spark.implicits._
-    // $example on:create_ds$
-    // Encoders are created for case classes
     val caseClassDS = Seq(Person("Andy", 32)).toDS()
     caseClassDS.show()
     // +----+---+
@@ -182,8 +162,6 @@ object SparkSQLExample {
   }
 
   private def runInferSchemaExample(spark: SparkSession): Unit = {
-    // $example on:schema_inferring$
-    // For implicit conversions from RDDs to DataFrames
     import spark.implicits._
 
     // Create an RDD of Person objects from a text file, convert it to a Dataframe
